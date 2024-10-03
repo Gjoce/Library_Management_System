@@ -7,12 +7,43 @@ function addBook($title, $author, $published_year, $genre, $available_copies, $d
     return $stmt->execute([$title, $author, $published_year, $genre, $available_copies, $description]);
 }
 
-function fetchBooks() {
+function fetchBooks($search = '', $genre = '') {
     global $conn;
-    $stmt = $conn->prepare("SELECT * FROM BOOKS");
+
+    // Start with the base query
+    $sql = "SELECT * FROM BOOKS WHERE 1=1";
+
+    // Add search filtering if the search term is provided
+    if (!empty($search)) {
+        $sql .= " AND (TITLE LIKE :search OR AUTHOR LIKE :search)";
+    }
+
+    // Add genre filtering if a genre is selected
+    if (!empty($genre)) {
+        $sql .= " AND GENRE = :genre";
+    }
+
+    // Prepare the statement
+    $stmt = $conn->prepare($sql);
+
+    // Bind search parameter
+    if (!empty($search)) {
+        $searchParam = "%" . $search . "%";
+        $stmt->bindParam(':search', $searchParam);
+    }
+
+    // Bind genre parameter
+    if (!empty($genre)) {
+        $stmt->bindParam(':genre', $genre);
+    }
+
+    // Execute the query
     $stmt->execute();
+
+    // Return the results
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
 
 // Function to edit a book with optional fields
 function editBook($id, $data) {

@@ -3,55 +3,74 @@ const booksPerPage = 4; // Number of books to show per page
 let books = []; // Array to hold all fetched books
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Fetch and display all books when the page loads
-    fetchBooks();
+    fetchBooks(); // Fetch and display books when the page loads
     checkAuthToken();
 
     // Event listener for the book form submission
-    document.getElementById('bookForm').addEventListener('submit', async (event) => {
-        event.preventDefault();
+    document.getElementById('bookForm').addEventListener('submit', handleFormSubmission);
 
-        const bookId = document.getElementById('bookId').value;
-        const bookData = {
-            id: bookId, // Include ID in the payload for editing
-            TITLE: document.getElementById('bookTitle').value,
-            AUTHOR: document.getElementById('bookAuthor').value,
-            PUBLISHED_YEAR: document.getElementById('publishedYear').value || null,
-            GENRE: document.getElementById('bookGenre').value,
-            AVAILABLE_COPIES: document.getElementById('availableCopies').value || 1,
-            DESCRIPTION: document.getElementById('bookDescription').value
-        };
 
-        const url = bookId ? `http://localhost:8080/Library_Management_System/backend/api/books/edit.php` : 'http://localhost:8080/Library_Management_System/backend/api/books/add.php';
-        const method = bookId ? 'PUT' : 'POST';
 
-        try {
-            const response = await fetch(url, {
-                method: method,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(bookData)
-            });
+    // Event listeners for search input and genre filter
+    document.getElementById('searchInput').addEventListener('input', () => {
+        currentPage = 1; // Reset to the first page
+        fetchBooks(); // Fetch books based on filters
+    });
 
-            const data = await response.json();
-            document.getElementById('formFeedback').textContent = data.message || data.error;
-            document.getElementById('formFeedback').className = data.success ? 'text-success' : 'text-danger';
-
-            // Reset form
-            document.getElementById('bookForm').reset();
-            document.getElementById('bookId').value = '';
-            fetchBooks(); // Refresh the book list
-        } catch (error) {
-            console.error('Error adding/updating book:', error);
-        }
+    document.getElementById('genreFilter').addEventListener('change', () => {
+        currentPage = 1; // Reset to the first page
+        fetchBooks(); // Fetch books based on filters
     });
 });
 
-// Function to fetch and display all books
-async function fetchBooks() {
+// Handle the form submission for adding/editing books
+async function handleFormSubmission(event) {
+    event.preventDefault();
+    const bookId = document.getElementById('bookId').value;
+    const bookData = {
+        id: bookId,
+        TITLE: document.getElementById('bookTitle').value,
+        AUTHOR: document.getElementById('bookAuthor').value,
+        PUBLISHED_YEAR: document.getElementById('publishedYear').value || null,
+        GENRE: document.getElementById('bookGenre').value,
+        AVAILABLE_COPIES: document.getElementById('availableCopies').value || 1,
+        DESCRIPTION: document.getElementById('bookDescription').value
+    };
+
+    const url = bookId ? `http://localhost:8080/Library_Management_System/backend/api/books/edit.php` : 'http://localhost:8080/Library_Management_System/backend/api/books/add.php';
+    const method = bookId ? 'PUT' : 'POST';
+
     try {
-        const response = await fetch('http://localhost:8080/Library_Management_System/backend/api/books/fetch.php');
+        const response = await fetch(url, {
+            method: method,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(bookData)
+        });
+
+        const data = await response.json();
+        document.getElementById('formFeedback').textContent = data.message || data.error;
+        document.getElementById('formFeedback').className = data.success ? 'text-success' : 'text-danger';
+
+        // Reset form
+        document.getElementById('bookForm').reset();
+        document.getElementById('bookId').value = '';
+        fetchBooks(); // Refresh the book list
+    } catch (error) {
+        console.error('Error adding/updating book:', error);
+    }
+}
+
+// Fetch books with optional search and genre filters
+async function fetchBooks() {
+    const searchInput = document.getElementById('searchInput').value;
+    const genreFilter = document.getElementById('genreFilter').value;
+
+    let queryString = `?search=${encodeURIComponent(searchInput)}&genre=${encodeURIComponent(genreFilter)}`;
+
+    try {
+        const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/books/fetch.php${queryString}`);
         books = await response.json();
         displayBooks();
         setupPagination();
@@ -60,7 +79,7 @@ async function fetchBooks() {
     }
 }
 
-// Function to display books in the table based on the current page
+// Display books in the table based on the current page
 function displayBooks() {
     const booksTableBody = document.getElementById('booksTableBody');
     booksTableBody.innerHTML = ''; // Clear previous entries
@@ -74,7 +93,7 @@ function displayBooks() {
         bookRow.innerHTML = `
             <td>${book.id}</td>
             <td>${book.TITLE}</td>
-            <td>${book.AUTHOR}</td>
+            <td>${book.AUTHOR || 'Unknown'}</td>
             <td>${book.PUBLISHED_YEAR || 'N/A'}</td>
             <td>${book.GENRE}</td>
             <td>${book.AVAILABLE_COPIES}</td>
@@ -88,7 +107,7 @@ function displayBooks() {
     });
 }
 
-// Function to setup pagination controls
+// Setup pagination controls
 function setupPagination() {
     const paginationContainer = document.getElementById('pagination');
     paginationContainer.innerHTML = ''; // Clear previous pagination
@@ -107,7 +126,7 @@ function setupPagination() {
     for (let i = 1; i <= totalPages; i++) {
         const pageButton = document.createElement('button');
         pageButton.textContent = i;
-        pageButton.className = (i === currentPage) ? 'active' : ''; // Highlight the active page
+        pageButton.className = (i === currentPage) ? 'active' : '';
         pageButton.onclick = () => changePage(i);
         paginationContainer.appendChild(pageButton);
     }
@@ -121,7 +140,7 @@ function setupPagination() {
     }
 }
 
-// Function to change the current page and refresh the display
+// Change the current page and refresh the display
 function changePage(page) {
     currentPage = page;
     displayBooks();
