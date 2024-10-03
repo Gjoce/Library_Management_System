@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Librarian Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    
 </head>
 
 <body>
@@ -18,7 +17,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#" id="logoutBtn">Logout</a>
+                    <a class="nav-link" href="#" id="logoutBtn" onclick="logout()">Logout</a>
                 </li>
             </ul>
         </div>
@@ -47,7 +46,16 @@
                             </div>
                             <div class="form-group">
                                 <label for="bookGenre">Genre</label>
-                                <input type="text" class="form-control" id="bookGenre" required>
+                                <select class="form-control" id="bookGenre" required>
+                                    <option value="">Select Genre</option>
+                                    <option value="Fiction">Fiction</option>
+                                    <option value="Non-Fiction">Non-Fiction</option>
+                                    <option value="Science Fiction">Science Fiction</option>
+                                    <option value="Fantasy">Fantasy</option>
+                                    <option value="Mystery">Mystery</option>
+                                    <option value="Biography">Biography</option>
+                                    <!-- Add more genres as needed -->
+                                </select>
                             </div>
                             <div class="form-group">
                                 <label for="availableCopies">Available Copies</label>
@@ -67,6 +75,23 @@
                 <div class="card mb-4">
                     <div class="card-header">View All Books</div>
                     <div class="card-body">
+                        <div class="form-group">
+                            <label for="searchInput">Search by Title or Author</label>
+                            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                        </div>
+                        <div class="form-group">
+                            <label for="genreFilter">Filter by Genre</label>
+                            <select class="form-control" id="genreFilter">
+                                <option value="">All Genres</option>
+                                <option value="Fiction">Fiction</option>
+                                <option value="Non-Fiction">Non-Fiction</option>
+                                <option value="Science Fiction">Science Fiction</option>
+                                <option value="Fantasy">Fantasy</option>
+                                <option value="Mystery">Mystery</option>
+                                <option value="Biography">Biography</option>
+                                <!-- Add more genres as needed -->
+                            </select>
+                        </div>
                         <button class="btn btn-info mb-3" id="viewBooksBtn">View All Books</button>
                         <div class="table-responsive">
                             <table class="table table-bordered" id="booksTable">
@@ -86,6 +111,10 @@
                                     <!-- Book rows will be added here dynamically -->
                                 </tbody>
                             </table>
+                            <div id="pagination" class="pagination-container">
+                                <!-- Pagination buttons will be dynamically added here -->
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

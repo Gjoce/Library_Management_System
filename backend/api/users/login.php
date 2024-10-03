@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode([
                     "message" => "Login successful!",
                     "token" => $jwt,
-                    "user" => $user // You may want to remove sensitive information like passwords
+                    // You may want to remove sensitive information like passwords
                 ]);
             } else {
                 echo json_encode(["message" => "Access denied. Only librarians can log in."]);
