@@ -128,18 +128,20 @@ function changePage(page) {
     setupPagination();
 }
 
-// Function to edit a book
 function editBook(bookId) {
-    // Use fetch to get book details to edit
-    fetch(`http://localhost:8080/Library_Management_System/backend/api/books/fetch.php?id=${bookId}`)
-        .then(response => response.json())
-        .then(books => {
-            console.log(books); // Log the array to ensure it contains the expected data
+    // Fetch the specific book details by ID
+    fetch(`http://localhost:8080/Library_Management_System/backend/api/books/fetch_single_book.php?id=${bookId}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(book => {
+            console.log('Book fetched for editing:', book); // Log the book data
 
-            if (books && books.length > 0) {
-                // Since books is an array, access the first element
-                const book = books[0];
-
+            // Check if book is valid and not an error
+            if (!book.error) {
                 // Populate the form with book details
                 document.getElementById('bookId').value = book.id || '';
                 document.getElementById('bookTitle').value = book.TITLE || '';
@@ -154,6 +156,8 @@ function editBook(bookId) {
         })
         .catch(error => console.error('Error fetching book details:', error));
 }
+
+
 
 // Function to delete a book
 async function deleteBook(bookId) {
@@ -206,8 +210,7 @@ function logout() {
     });
 }
 
-// Add a button or link that triggers the logout function
-document.getElementById('logoutButton').addEventListener('click', logout);
+
 
 function checkAuthToken() {
     const token = localStorage.getItem('authToken');
@@ -223,31 +226,4 @@ function checkAuthToken() {
     return true;
 }
 
-$(document).ready(function() {
-    // Event handler for search input
-    $('#searchInput').on('input', function() {
-        const searchTerm = $(this).val().toLowerCase();
-        const filteredBooks = books.filter(book => 
-            book.TITLE.toLowerCase().includes(searchTerm) || 
-            book.AUTHOR.toLowerCase().includes(searchTerm)
-        );
-        displayFilteredBooks(filteredBooks);
-    });
-
-    // Event handler for genre filter
-    $('#genreFilter').on('change', function() { // Change to '#genreFilter'
-        const selectedGenre = $(this).val();
-        const filteredBooks = selectedGenre === '' ? books : books.filter(book => book.GENRE === selectedGenre);
-        displayFilteredBooks(filteredBooks);
-    });
-});
-
-// Function to display filtered books
-function displayFilteredBooks(filteredBooks) {
-    // Reset the global books array with filtered results
-    books = filteredBooks; 
-    currentPage = 1; // Reset to the first page
-    displayBooks(); // Display filtered books
-    setupPagination(); // Setup pagination for filtered results
-}
 
