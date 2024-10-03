@@ -63,20 +63,29 @@ function editBook($id, $data) {
 
 function deleteBook($id) {
     global $conn;
-    $stmt = $conn->prepare("DELETE FROM BOOKS WHERE id=?");
-    return $stmt->execute([$id]);
+
+    // First, delete any loans associated with this book
+    $deleteLoansQuery = "DELETE FROM loans WHERE BOOK_ID = :book_id";
+    $stmt = $conn->prepare($deleteLoansQuery);
+    $stmt->execute([':book_id' => $id]);
+
+    // Then, delete the book
+    $deleteBookQuery = "DELETE FROM books WHERE id = :id";
+    $stmt = $conn->prepare($deleteBookQuery);
+    return $stmt->execute([':id' => $id]);
 }
 
 
+
 // Add a new user to the database
-function addUser($name, $email, $password) {
+function addUser($name, $email, $password, $role = 'USER') {
     global $conn;
 
     // Hash the password for security
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
-    // Prepare the SQL statement with PDO
-    $sql = "INSERT INTO USERS (NAME, EMAIL, PASSWORD) VALUES (:name, :email, :password)";
+    // Prepare the SQL statement with PDO to include the role
+    $sql = "INSERT INTO USERS (NAME, EMAIL, PASSWORD, ROLE) VALUES (:name, :email, :password, :role)";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -84,11 +93,13 @@ function addUser($name, $email, $password) {
         return $stmt->execute([
             ':name' => $name,
             ':email' => $email,
-            ':password' => $hashed_password
+            ':password' => $hashed_password,
+            ':role' => $role // Bind the role parameter
         ]);
     }
     return false;
 }
+
 
 
 // Fetch all users from the database
