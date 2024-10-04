@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Loans</title>
+</head>
+<body>
+    <h2>User Loans</h2>
+    <div id="loansTableContainer">
+        <table id="loansTable">
+            <thead>
+                <tr>
+                    <th>Loan ID</th>
+                    <th>User Name</th>
+                    <th>Book Title</th>
+                    <th>Loan Date</th>
+                    <th>Return Date</th>
+                </tr>
+            </thead>
+            <tbody id="loansTableBody">
+                <!-- User loans will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Function to fetch and display user loans
+        async function fetchUserLoans() {
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get('user_id');
+
+            if (userId) {
+                try {
+                    const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/getSpecificUser.php?user_id=${userId}`);
+                    const loans = await response.json();
+                    displayUserLoans(loans);
+                } catch (error) {
+                    console.error('Error fetching user loans:', error);
+                }
+            }
+        }
+
+        // Function to display user loans in the table
+        function displayUserLoans(loans) {
+            const loansTableBody = document.getElementById('loansTableBody');
+            loansTableBody.innerHTML = ''; // Clear previous entries
+
+            loans.forEach(loan => {
+                const loanRow = document.createElement('tr');
+                loanRow.innerHTML = `
+                    <td>${loan.id}</td>
+                    <td>${loan.user_name}</td>
+                    <td>${loan.book_title}</td>
+                    <td>${loan.LOAN_DATE || 'N/A'}</td>
+                    <td>${loan.RETURN_DATE || 'Not Returned'}</td>
+                `;
+                loansTableBody.appendChild(loanRow);
+            });
+        }
+
+        // Call the function on page load
+        document.addEventListener('DOMContentLoaded', fetchUserLoans);
+    </script>
+</body>
+</html>
