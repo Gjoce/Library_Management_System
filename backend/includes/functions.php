@@ -259,17 +259,15 @@ function addLoan($user_id, $book_id, $loan_date, $return_date = null) {
         return false;
     }
 }
-
-
 function fetchLoans($userFilter = '', $bookTitleFilter = '') {
     global $conn;
 
-    // Base query to fetch loans
-    $query = "SELECT LOANS.id, USERS.NAME as user_name, BOOKS.TITLE as book_title, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
+    // Base query to fetch loans, including the user ID
+    $query = "SELECT LOANS.id AS loan_id, USERS.id AS user_id, USERS.NAME as user_name, BOOKS.TITLE as book_title, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
               FROM LOANS 
               JOIN USERS ON LOANS.USER_ID = USERS.id
               JOIN BOOKS ON LOANS.BOOK_ID = BOOKS.id
-              WHERE 1=1";
+              WHERE 1=1";  // Use 1=1 to facilitate appending additional WHERE clauses
 
     // Append filters to the query if they are set
     $params = [];
@@ -285,8 +283,9 @@ function fetchLoans($userFilter = '', $bookTitleFilter = '') {
     $stmt = $conn->prepare($query);
     $stmt->execute($params);
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC); // Returns all matched rows as an associative array
 }
+
 
 function updateLoanReturnDate($loan_id, $return_date) {
     global $conn;
