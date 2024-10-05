@@ -6,7 +6,7 @@ header('Content-Type: application/json');
 
 // Get the filter parameters from the request
 $userFilter = isset($_GET['user']) ? $_GET['user'] : '';
-$bookTitleFilter = isset($_GET['title']) ? $_GET['title'] : '';
+$bookTitleFilter = isset($_GET['book_title']) ? $_GET['book_title'] : '';
 
 
 $loans = fetchLoans($userFilter, $bookTitleFilter); // Call function with filters

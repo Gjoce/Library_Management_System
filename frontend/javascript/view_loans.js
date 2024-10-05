@@ -37,6 +37,7 @@ loans.forEach(loan => {
         <td>${loan.RETURN_DATE || 'Not Returned'}</td>
           <td>
                 <button class="btn btn-danger btn-sm" onclick="removeLoan(${loan.id})">Remove</button>
+                <button class="btn btn-primary btn-sm" onclick="updateLoanReturnDate(${loan.id})">Returned</button>
                 
             </td>
     `;
@@ -56,9 +57,31 @@ async function removeLoan(loanId) {
             });
             const data = await response.json();
             alert(data.message || 'Loan removed successfully.');
-            fetchLoans(); // Refresh the loan list
+            fetchUserLoans(); // Refresh the loan list
         } catch (error) {
             console.error('Error removing loan:', error);
+        }
+    }
+}
+
+async function updateLoanReturnDate(loanId) {
+    const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+
+    if (confirm('Are you sure you want to mark this loan as returned?')) {
+        const requestData = { id: loanId, return_date: currentDate };
+        console.log('Request data:', requestData); // Log the request data
+
+        try {
+            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/updateReturnDate.php`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(requestData)
+            });
+            const data = await response.json();
+            alert(data.message || 'Return date updated successfully.');
+            fetchUserLoans(); // Refresh the loan list
+        } catch (error) {
+            console.error('Error updating return date:', error);
         }
     }
 }
