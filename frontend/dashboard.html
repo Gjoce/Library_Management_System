@@ -5,10 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Librarian Dashboard</title>
+    <!-- Add Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/stylesDash.css"> <!-- Link to the custom CSS file -->
 </head>
 
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">Library Management</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,71 +30,33 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
-        <h2 class="text-center">Welcome, Librarian</h2>
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card mb-4">
-                    <div class="card-header">Add/Edit Book</div>
-                    <div class="card-body">
-                        <form id="bookForm">
-                            <input type="hidden" id="bookId">
-                            <div class="form-group">
-                                <label for="bookTitle">Title</label>
-                                <input type="text" class="form-control" id="bookTitle" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="bookAuthor">Author</label>
-                                <input type="text" class="form-control" id="bookAuthor" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="publishedYear">Published Year</label>
-                                <input type="number" class="form-control" id="publishedYear">
-                            </div>
-                            <div class="form-group">
-                                <label for="bookGenre">Genre</label>
-                                <select class="form-control" id="bookGenre" required>
-                                    <option value="">Select Genre</option>
-                                    <option value="Fiction">Fiction</option>
-                                    <option value="Non-Fiction">Non-Fiction</option>
-                                    <option value="Science Fiction">Science Fiction</option>
-                                    <option value="Fantasy">Fantasy</option>
-                                    <option value="Mystery">Mystery</option>
-                                    <option value="Biography">Biography</option>
-                                    <option value="Dystopian">Dystopian</option>
-                                    <option value="Romance">Romance</option>
-                                    <option value="Tragedy">Tragedy</option>
-                                    <option value="Adventure">Adventure</option>
-                                    <option value="Horror">Horror</option>
-                                    <!-- Add more genres as needed -->
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="availableCopies">Available Copies</label>
-                                <input type="number" class="form-control" id="availableCopies" value="1">
-                            </div>
-                            <div class="form-group">
-                                <label for="bookDescription">Description</label>
-                                <textarea class="form-control" id="bookDescription" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary" id="submitBookBtn">Add Book</button>
-                        </form>
-                        <div id="formFeedback" class="mt-2"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-8">
-                <div class="card mb-4">
-                    <div class="card-header">View Books</div>
-                    <div class="card-body">
+    <!-- Welcome Message -->
+<div class="container mt-4">
+    <h2 class="text-center welcome-text card">Welcome, Librarian</h2>
+    <div class="row">
+        <!-- Increased the width of the form column -->
+        <div class="col-md-3">
+            <div class="card mb-4">
+                <div class="card-header" id="tekst">Add/Edit Book</div>
+                <div class="card-body">
+                    <form id="bookForm">
+                        <input type="hidden" id="bookId">
                         <div class="form-group">
-                            <label for="searchInput">Search by Title or Author</label>
-                            <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                            <label for="bookTitle">Title</label>
+                            <input type="text" class="form-control" id="bookTitle" required>
                         </div>
                         <div class="form-group">
-                            <label for="genreFilter">Filter by Genre</label>
-                            <select class="form-control" id="genreFilter">
-                                <option value="">All Genres</option>
+                            <label for="bookAuthor">Author</label>
+                            <input type="text" class="form-control" id="bookAuthor" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="publishedYear">Published Year</label>
+                            <input type="number" class="form-control" id="publishedYear">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookGenre">Genre</label>
+                            <select class="form-control" id="bookGenre" required>
+                                <option value="">Select Genre</option>
                                 <option value="Fiction">Fiction</option>
                                 <option value="Non-Fiction">Non-Fiction</option>
                                 <option value="Science Fiction">Science Fiction</option>
@@ -102,38 +68,75 @@
                                 <option value="Tragedy">Tragedy</option>
                                 <option value="Adventure">Adventure</option>
                                 <option value="Horror">Horror</option>
-                                <!-- Add more genres as needed -->
                             </select>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered" id="booksTable">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Title</th>
-                                        <th>Author</th>
-                                        <th>Published Year</th>
-                                        <th>Genre</th>
-                                        <th>Available Copies</th>
-                                        <th>Description</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="booksTableBody">
-                                    <!-- Book rows will be added here dynamically -->
-                                </tbody>
-                            </table>
-                            <div id="pagination" class="pagination-container">
-                                <!-- Pagination buttons will be dynamically added here -->
-                            </div>
-                            
+                        <div class="form-group">
+                            <label for="availableCopies">Available Copies</label>
+                            <input type="number" class="form-control" id="availableCopies" value="1">
+                        </div>
+                        <div class="form-group">
+                            <label for="bookDescription">Description</label>
+                            <!-- Set a custom height for the description textarea -->
+                            <textarea class="form-control" id="bookDescription" rows="6" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="submitBookBtn">Add Book</button>
+                    </form>
+                    <div id="formFeedback" class="mt-2"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9">
+            <div class="card mb-4">
+                <div class="card-header" id="tekst">View Books</div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="searchInput">Search by Title or Author</label>
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search...">
+                    </div>
+                    <div class="form-group">
+                        <label for="genreFilter">Filter by Genre</label>
+                        <select class="form-control" id="genreFilter">
+                            <option value="">All Genres</option>
+                            <option value="Fiction">Fiction</option>
+                            <option value="Non-Fiction">Non-Fiction</option>
+                            <option value="Science Fiction">Science Fiction</option>
+                            <option value="Fantasy">Fantasy</option>
+                            <option value="Mystery">Mystery</option>
+                            <option value="Biography">Biography</option>
+                            <option value="Dystopian">Dystopian</option>
+                            <option value="Romance">Romance</option>
+                            <option value="Tragedy">Tragedy</option>
+                            <option value="Adventure">Adventure</option>
+                            <option value="Horror">Horror</option>
+                        </select>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="booksTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Published Year</th>
+                                    <th>Genre</th>
+                                    <th>Available Copies</th>
+                                    <th>Description</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="booksTableBody">
+                                <!-- Book rows will be added here dynamically -->
+                            </tbody>
+                        </table>
+                        <div id="pagination" class="pagination-container">
+                            <!-- Pagination buttons will be dynamically added here -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+</div>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

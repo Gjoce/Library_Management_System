@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>View Loans</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/stylesDash.css"> <!-- Link to the custom CSS file -->
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -22,33 +24,46 @@
     </nav>
     
     <div class="container mt-4">
-        <h2 class="text-center">Loaned Books</h2>
-        <div class="form-group">
-            <label for="userFilter">Filter by User</label>
-            <input type="text" id="userFilter" class="form-control" placeholder="Enter User Name...">
-        </div>
-        <div class="form-group">
-            <label for="bookTitleFilter">Filter by Book Title</label>
-            <input type="text" id="bookTitleFilter" class="form-control" placeholder="Enter Book Title...">
+        <h2 class="text-center welcome-text card">Loaned Books</h2>
+        
+        <!-- Loan Filters -->
+        <div class="card p-4 mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="userFilter">Filter by User</label>
+                        <input type="text" id="userFilter" class="form-control" placeholder="Enter User Name...">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="bookTitleFilter">Filter by Book Title</label>
+                        <input type="text" id="bookTitleFilter" class="form-control" placeholder="Enter Book Title...">
+                    </div>
+                </div>
+            </div>
         </div>
         
-        <div class="table-responsive">
-            <table class="table table-bordered" id="loansTable">
-                <thead>
-                    <tr>
-                        <th>Loan ID</th>
-                        <th>User ID</th>
-                        <th>User Name</th>
-                        <th>Book Title</th>
-                        <th>Loan Date</th>
-                        <th>Return Date</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody id="loansTableBody">
-                    <!-- Loan rows will be added dynamically -->
-                </tbody>
-            </table>
+        <!-- Loan Table -->
+        <div class="card p-4">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="loansTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Loan ID</th>
+                            <th>User ID</th>
+                            <th>User Name</th>
+                            <th>Book Title</th>
+                            <th>Loan Date</th>
+                            <th>Return Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="loansTableBody">
+                        <!-- Loan rows will be added dynamically -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     
