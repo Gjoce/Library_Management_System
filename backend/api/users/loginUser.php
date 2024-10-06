@@ -1,5 +1,8 @@
 <?php
 include '../../includes/functions.php';
+require '../../vendor/autoload.php'; // Path to where Composer installed the JWT library
+
+use \Firebase\JWT\JWT;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Decode the JSON input
@@ -14,9 +17,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = loginUser1($email, $password);
 
         if ($user) {
-            // Successful login
-            // Add user ID to the response
-            echo json_encode(["message" => "Login successful!", "user_id" => $user['id']]);
+            // JWT token setup for users
+            $secret_key = "USERADMIN"; // Use a strong, secret key for user JWT
+            $issuer_claim = "localhost"; // Your domain, or 'localhost' for development
+            $audience_claim = "users";   // Audience identifier for users
+            $issued_at = time();         // Current timestamp
+            $expiration_time = $issued_at + 3600; // Token valid for 1 hour (3600 seconds)
+
+            // The payload that will be signed into the token
+            $payload = array(
+                "iss" => $issuer_claim,
+                "aud" => $audience_claim,
+                "iat" => $issued_at,
+                "exp" => $expiration_time,
+                "data" => array(
+                    "id" => $user['id'],
+                    "email" => $user['EMAIL'],
+                    "role" => 'user' // Assign role as user
+                )
+            );
+
+            // Encode the payload using the secret key to generate the JWT token
+            $jwt = JWT::encode($payload, $secret_key, 'HS256');
+
+            // Return the token and user data to the client
+            echo json_encode([
+                "message" => "Login successful!",
+                "token" => $jwt,
+                "user_id" => $user['id'] // Send back the user ID as well
+            ]);
         } else {
             // Invalid credentials
             echo json_encode(["message" => "Invalid email or password."]);
@@ -46,4 +75,3 @@ function loginUser1($email, $password) {
     }
     return false; // Return false if user not found or password mismatch
 }
-?>

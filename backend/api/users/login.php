@@ -11,14 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $inputData['email'];
         $password = $inputData['password'];
 
-        $user = loginUser($email, $password); // Assuming this function checks credentials and returns user info
+        $user = loginUser($email, $password); // Function to validate user credentials
 
         if ($user) {
             if ($user['ROLE'] === 'librarian') {
                 // JWT token setup
-                $secret_key = "YOUR_SECRET_KEY"; // Use a strong, secret key for JWT
+                $secret_key = "LIBRARIANADMIN"; // Use a strong, secret key for librarian JWT
                 $issuer_claim = "localhost"; // Your domain, or 'localhost' for development
-                $audience_claim = "users";   // Could be the same as issuer, or any audience identifier
+                $audience_claim = "librarians";   // Audience identifier for librarians
                 $issued_at = time();         // Current timestamp
                 $expiration_time = $issued_at + 3600; // Token valid for 1 hour (3600 seconds)
                 
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode([
                     "message" => "Login successful!",
                     "token" => $jwt,
-                    // You may want to remove sensitive information like passwords
+                    "role" => "librarian" // Optionally send role back
                 ]);
             } else {
                 echo json_encode(["message" => "Access denied. Only librarians can log in."]);

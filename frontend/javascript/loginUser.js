@@ -23,8 +23,12 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         const result = await response.json();
 
         if (response.ok) {
+            // Store the JWT token in localStorage
+            localStorage.setItem('jwt', result.token);
+            localStorage.setItem('userId', result.user_id); // Store user ID as well
+
+            // Redirect to the user dashboard or home page
             window.location.href = 'dash.html'; // Change this to your user dashboard page
-            localStorage.setItem('userId', result.user_id);
         } else {
             // Handle error
             document.getElementById('errorMessage').innerText = result.message;
@@ -34,3 +38,4 @@ document.getElementById('loginForm').addEventListener('submit', async function (
         document.getElementById('errorMessage').innerText = 'An error occurred. Please try again later.';
     }
 });
+

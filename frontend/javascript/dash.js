@@ -4,6 +4,7 @@ let books = []; // Array to hold all fetched books
 
 document.addEventListener('DOMContentLoaded', () => {
     fetchBooks(); // Fetch and display books when the page loads
+    checkAuthToken();
     
 
     // Event listeners for search input and genre filter
@@ -142,4 +143,17 @@ function logout() {
 }
 
 // Function to check for authentication token
+function checkAuthToken() {
+    const token = localStorage.getItem('jwt');
+
+    if (!token) {
+        // If the token is missing, redirect to the login page
+        window.location.href = 'loginUser.html';
+        return false;
+    }
+
+    // Optionally verify the token (this could be a server call to validate the token)
+    // Here we simply return true for now.
+    return true;
+}
 

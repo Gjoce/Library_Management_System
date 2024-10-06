@@ -57,6 +57,7 @@ loansTableBody.innerHTML = '<tr><td colspan="5">No loans found for this user.</t
 // Call the function on page load
 document.addEventListener('DOMContentLoaded', () => {
     fetchUserLoans();
+    checkAuthToken();
     
   });
 
@@ -80,4 +81,18 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => {
         console.error('Error during logout:', error);
     });
+}
+
+function checkAuthToken() {
+    const token = localStorage.getItem('jwt');
+
+    if (!token) {
+        // If the token is missing, redirect to the login page
+        window.location.href = 'loginUser.html';
+        return false;
+    }
+
+    // Optionally verify the token (this could be a server call to validate the token)
+    // Here we simply return true for now.
+    return true;
 }
