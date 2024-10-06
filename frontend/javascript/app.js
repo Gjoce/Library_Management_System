@@ -26,9 +26,6 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             // Store the JWT token in localStorage
             localStorage.setItem('authToken', data.token);
 
-            // Optionally store user data
-            localStorage.setItem('user', JSON.stringify(data.user));
-
             // Redirect to dashboard after successful login
             setTimeout(() => {
                 window.location.href = 'dashboard.html';  // Redirect to dashboard
