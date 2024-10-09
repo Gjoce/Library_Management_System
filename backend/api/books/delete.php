@@ -1,16 +1,15 @@
 <?php
-include '../../includes/connection.php';  // Ensure you have this connection file
-include '../../includes/functions.php';  // Ensure you have this functions file
+include '../../includes/connection.php';  
+include '../../includes/functions.php';  
 
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { // Change to DELETE method
-    // Get the JSON data from the request body
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') { 
     $inputData = json_decode(file_get_contents('php://input'), true);
 
-    // Check if the ID is provided
+   
     if (isset($inputData['id'])) {
         $id = $inputData['id'];
 
-        // Call the deleteBook function
+      
         if (deleteBook($id)) {
             echo json_encode(["message" => "Book deleted successfully!"]);
         } else {

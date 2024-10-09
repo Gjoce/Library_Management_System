@@ -1,10 +1,10 @@
 <?php
-// connection.php
 
-$host = 'localhost'; // or your host
-$db = 'library_managament_system'; // your database name
-$user = 'root'; // your database username
-$pass = ''; // your database password
+
+$host = 'localhost'; 
+$db = 'library_managament_system'; 
+$user = 'root'; 
+$pass = ''; 
 
 try {
     $conn = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
