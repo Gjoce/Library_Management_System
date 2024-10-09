@@ -99,7 +99,7 @@ function displayBooks() {
             <td>${book.AVAILABLE_COPIES}</td>
             <td>${book.DESCRIPTION}</td>
             <td>
-                <button class="btn btn-warning btn-sm" onclick="editBook(${book.id})">Edit</button>
+                <button class="btn btn-secondary btn-sm" onclick="editBook(${book.id})">Edit</button>
                 <button class="btn btn-danger btn-sm" onclick="deleteBook(${book.id})">Delete</button>
             </td>
         `;

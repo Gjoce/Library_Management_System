@@ -253,18 +253,33 @@ function addLoan($user_id, $book_id, $loan_date, $return_date = null) {
         return false;
     }
 }
-
-
-function fetchLoans() {
+function fetchLoans($userFilter = '', $bookTitleFilter = '') {
     global $conn;
 
-    $stmt = $conn->prepare("SELECT LOANS.id, USERS.NAME as user_name, BOOKS.TITLE as book_title, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
-                            FROM LOANS 
-                            JOIN USERS ON LOANS.USER_ID = USERS.id
-                            JOIN BOOKS ON LOANS.BOOK_ID = BOOKS.id");
-    $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    // Base query to fetch loans, including the user ID
+    $query = "SELECT LOANS.id AS loan_id, USERS.id AS user_id, USERS.NAME as user_name, BOOKS.TITLE as book_title, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
+              FROM LOANS 
+              JOIN USERS ON LOANS.USER_ID = USERS.id
+              JOIN BOOKS ON LOANS.BOOK_ID = BOOKS.id
+              WHERE 1=1";  // Use 1=1 to facilitate appending additional WHERE clauses
+
+    // Append filters to the query if they are set
+    $params = [];
+    if (!empty($userFilter)) {
+        $query .= " AND USERS.NAME LIKE ?";
+        $params[] = "%$userFilter%";
+    }
+    if (!empty($bookTitleFilter)) {
+        $query .= " AND BOOKS.TITLE LIKE ?";
+        $params[] = "%$bookTitleFilter%";
+    }
+
+    $stmt = $conn->prepare($query);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC); // Returns all matched rows as an associative array
 }
+
 
 function updateLoanReturnDate($loan_id, $return_date) {
     global $conn;
@@ -292,6 +307,7 @@ function deleteLoan($id) {
 function getUserLoans($user_id) {
     global $conn;
 
+<<<<<<< HEAD
     
     $sql = "SELECT LOANS.id, BOOKS.TITLE, BOOKS.AUTHOR, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
             FROM LOANS 
@@ -299,16 +315,29 @@ function getUserLoans($user_id) {
             WHERE LOANS.USER_ID = :user_id";
 
     $stmt = $conn->prepare($sql);
+=======
+    // SQL query to retrieve all books loaned by the specific user
+    $stmt = $conn->prepare("SELECT LOANS.id, USERS.id AS user_id, USERS.NAME as user_name, BOOKS.TITLE as book_title, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
+                             FROM LOANS 
+                             JOIN USERS ON LOANS.USER_ID = USERS.id
+                             JOIN BOOKS ON LOANS.BOOK_ID = BOOKS.id
+                             WHERE LOANS.USER_ID = :user_id");  // Added WHERE clause to filter by user ID
+>>>>>>> 735a5f1359d4eea540c87b33d5bc209a5c795436
 
+    // Execute the statement with the user ID parameter
     if ($stmt->execute([':user_id' => $user_id])) {
         // Fetch all loaned books for the user
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    return false;
+
+    return false; // Return false if the execution fails
 }
 
 
 
 
 
-?>
+
+
+
+
