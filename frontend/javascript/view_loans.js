@@ -5,7 +5,7 @@ async function fetchUserLoans() {
 
     if (userId) {
         try {
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/getSpecificUser.php?user_id=${userId}`);
+            const response = await fetch(`http://localhost:8080/api/loans/getSpecificUser.php?user_id=${userId}`);
             const loans = await response.json();
             console.log(loans);
 
@@ -50,7 +50,7 @@ loansTableBody.innerHTML = '<tr><td colspan="5">No loans found for this user.</t
 async function removeLoan(loanId) {
     if (confirm('Are you sure you want to remove this loan?')) {
         try {
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/delete.php`, {
+            const response = await fetch(`http://localhost:8080/api/loans/delete.php`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: loanId })
@@ -72,7 +72,7 @@ async function updateLoanReturnDate(loanId) {
         console.log('Request data:', requestData); // Log the request data
 
         try {
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/updateReturnDate.php`, {
+            const response = await fetch(`http://localhost:8080/api/loans/updateReturnDate.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestData)
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('authToken');
 
     // Send a request to the server to handle logout, if necessary
-    fetch('http://localhost:8080/Library_Management_System/backend/api/users/logout.php', {
+    fetch('http://localhost:8080/api/users/logout.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

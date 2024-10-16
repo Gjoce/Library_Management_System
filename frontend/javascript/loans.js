@@ -22,7 +22,7 @@ async function fetchLoans() {
     let queryString = `?user=${encodeURIComponent(userFilter)}&book_title=${encodeURIComponent(bookTitleFilter)}`;
 
     try {
-        const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/fetch.php${queryString}`);
+        const response = await fetch(`http://localhost:8080/api/loans/fetch.php${queryString}`);
         const loans = await response.json();
         displayLoans(loans);
     } catch (error) {
@@ -62,7 +62,7 @@ async function updateLoanReturnDate(loanId) {
         console.log('Request data:', requestData); // Log the request data
 
         try {
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/updateReturnDate.php`, {
+            const response = await fetch(`http://localhost:8080/api/loans/updateReturnDate.php`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(requestData)
@@ -84,7 +84,7 @@ async function updateLoanReturnDate(loanId) {
 // Function to display all loans for a specific user
 async function viewUserLoans(userId) {
     try {
-        const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/getSpecificUser.php?user_id=${encodeURIComponent(userId)}`);
+        const response = await fetch(`http://localhost:8080/api/loans/getSpecificUser.php?user_id=${encodeURIComponent(userId)}`);
         const loans = await response.json();
         
         // Display the loans for the specific user
@@ -99,7 +99,7 @@ async function viewUserLoans(userId) {
 async function removeLoan(loanId) {
     if (confirm('Are you sure you want to remove this loan?')) {
         try {
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/delete.php`, {
+            const response = await fetch(`http://localhost:8080/api/loans/delete.php`, {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ id: loanId })
@@ -118,7 +118,7 @@ function logout() {
     localStorage.removeItem('authToken');
 
     // Send a request to the server to handle logout, if necessary
-    fetch('http://localhost:8080/Library_Management_System/backend/api/users/logout.php', {
+    fetch('http://localhost:8080/api/users/logout.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

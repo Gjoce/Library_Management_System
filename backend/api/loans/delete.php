@@ -4,6 +4,14 @@ include '../../includes/functions.php';
 
 // Set the header to return JSON response
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Your frontend origin
+
+// Specify which HTTP methods are allowed (GET, POST, etc.)
+header("Access-Control-Allow-Methods: POST, GET, DELETE, OPTIONS");
+
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
     // Get the raw DELETE data

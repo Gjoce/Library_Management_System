@@ -27,7 +27,7 @@ async function fetchBooks() {
     let queryString = `?search=${encodeURIComponent(searchInput)}&genre=${encodeURIComponent(genreFilter)}`;
 
     try {
-        const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/books/fetch.php${queryString}`);
+        const response = await fetch(`http://localhost:8080/api/books/fetch.php${queryString}`);
         books = await response.json();
         displayBooks();
         setupPagination();
@@ -74,7 +74,7 @@ async function loanBook(bookId) {
         const loanDate = new Date().toISOString().slice(0, 10); // Current date in YYYY-MM-DD format
         
         try {
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/add.php`, {
+            const response = await fetch(`http://localhost:8080/api/loans/add.php`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -138,8 +138,9 @@ function changePage(page) {
 
 // Function to handle user logout
 function logout() {
-    localStorage.removeItem('authToken');
-    window.location.href = 'login.html';
+    localStorage.removeItem('jwt');
+    localStorage.removeItem('userId');
+    window.location.href = 'index.html';
 }
 
 // Function to check for authentication token

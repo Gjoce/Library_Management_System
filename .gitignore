@@ -1,2 +1,6 @@
 backend/.env
 vendor
+sql
+docker-compose.yml
+Dockerfile
+frontend.Dockerfile

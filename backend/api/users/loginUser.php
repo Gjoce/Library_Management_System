@@ -2,6 +2,14 @@
 include '../../includes/functions.php';
 require '../../vendor/autoload.php'; // Path to where Composer installed the JWT library
 
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Your frontend origin
+
+// Specify which HTTP methods are allowed (GET, POST, etc.)
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
+// Specify allowed headers (add headers as necessary)
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 use \Firebase\JWT\JWT;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -60,7 +68,7 @@ function loginUser1($email, $password) {
     global $conn;
 
     // Prepare SQL query to find the user by email
-    $sql = "SELECT * FROM USERS WHERE EMAIL = :email";
+    $sql = "SELECT * FROM users WHERE EMAIL = :email";
     $stmt = $conn->prepare($sql);
 
     if ($stmt->execute([':email' => $email])) {

@@ -1,9 +1,14 @@
 <?php
 include 'connection.php';
 
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Your frontend origin
+
+// Specify which HTTP methods are allowed (GET, POST, etc.)
+header("Access-Control-Allow-Methods: POST, PUT, DELETE, GET, OPTIONS");
+
 function addBook($title, $author, $published_year, $genre, $available_copies, $description) {
     global $conn;
-    $stmt = $conn->prepare("INSERT INTO BOOKS (TITLE, AUTHOR, PUBLISHED_YEAR, GENRE, AVAILABLE_COPIES, description) VALUES (?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO books (TITLE, AUTHOR, PUBLISHED_YEAR, GENRE, AVAILABLE_COPIES, description) VALUES (?, ?, ?, ?, ?, ?)");
     return $stmt->execute([$title, $author, $published_year, $genre, $available_copies, $description]);
 }
 
@@ -11,7 +16,7 @@ function fetchBooks($search = '', $genre = '') {
     global $conn;
 
     // Start with the base query
-    $sql = "SELECT * FROM BOOKS WHERE 1=1";
+    $sql = "SELECT * FROM books WHERE 1=1";
 
     // Add search filtering if the search term is provided
     if (!empty($search)) {
@@ -50,7 +55,7 @@ function editBook($id, $data) {
     global $conn;
 
     // Prepare the base query
-    $query = "UPDATE BOOKS SET ";
+    $query = "UPDATE books SET ";
     $params = [];
     
     // Check which fields are present and build the query accordingly
@@ -116,7 +121,7 @@ function addUser($name, $email, $password, $role = 'USER') {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepare the SQL statement with PDO to include the role
-    $sql = "INSERT INTO USERS (NAME, EMAIL, PASSWORD, ROLE) VALUES (:name, :email, :password, :role)";
+    $sql = "INSERT INTO users (NAME, EMAIL, PASSWORD, ROLE) VALUES (:name, :email, :password, :role)";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -138,7 +143,7 @@ function fetchUsers() {
     global $conn;
 
     // Prepare the SQL query to get all users
-    $sql = "SELECT id, NAME, EMAIL, CREATED_AT FROM USERS";
+    $sql = "SELECT id, NAME, EMAIL, CREATED_AT FROM users";
     $stmt = $conn->prepare($sql);
     
     if ($stmt->execute()) {
@@ -154,7 +159,7 @@ function deleteUser($id) {
     global $conn;
 
     // Prepare SQL query to delete user by ID
-    $sql = "DELETE FROM USERS WHERE id = :id";
+    $sql = "DELETE FROM users WHERE id = :id";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -173,7 +178,7 @@ function editUser($id, $name, $email, $password) {
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepare SQL query to update the user
-    $sql = "UPDATE USERS SET NAME = :name, EMAIL = :email, PASSWORD = :password WHERE id = :id";
+    $sql = "UPDATE users SET NAME = :name, EMAIL = :email, PASSWORD = :password WHERE id = :id";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -194,7 +199,7 @@ function loginUser($email, $password) {
     global $conn;
 
     // Prepare SQL query to find the user by email
-    $sql = "SELECT * FROM USERS WHERE EMAIL = :email";
+    $sql = "SELECT * FROM users WHERE EMAIL = :email";
     $stmt = $conn->prepare($sql);
 
     if ($stmt->execute([':email' => $email])) {
@@ -221,14 +226,14 @@ function addLoan($user_id, $book_id, $loan_date, $return_date = null) {
 
     try {
         // Check if there are available copies for the book
-        $sql = "SELECT AVAILABLE_COPIES FROM BOOKS WHERE id = :book_id";
+        $sql = "SELECT AVAILABLE_COPIES FROM books WHERE id = :book_id";
         $stmt = $conn->prepare($sql);
         $stmt->execute([':book_id' => $book_id]);
         $book = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($book && $book['AVAILABLE_COPIES'] > 0) {
             // Add the loan to the LOANS table
-            $sql = "INSERT INTO LOANS (USER_ID, BOOK_ID, LOAN_DATE, RETURN_DATE) 
+            $sql = "INSERT INTO loans (USER_ID, BOOK_ID, LOAN_DATE, RETURN_DATE) 
                     VALUES (:user_id, :book_id, :loan_date, :return_date)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([
@@ -239,7 +244,7 @@ function addLoan($user_id, $book_id, $loan_date, $return_date = null) {
             ]);
 
             // Decrease the available copies by 1
-            $sql = "UPDATE BOOKS SET AVAILABLE_COPIES = AVAILABLE_COPIES - 1 WHERE id = :book_id";
+            $sql = "UPDATE books SET AVAILABLE_COPIES = AVAILABLE_COPIES - 1 WHERE id = :book_id";
             $stmt = $conn->prepare($sql);
             $stmt->execute([':book_id' => $book_id]);
 
@@ -263,20 +268,20 @@ function fetchLoans($userFilter = '', $bookTitleFilter = '') {
     global $conn;
 
     // Base query to fetch loans, including the user ID
-    $query = "SELECT LOANS.id AS loan_id, USERS.id AS user_id, USERS.NAME as user_name, BOOKS.TITLE as book_title, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
-              FROM LOANS 
-              JOIN USERS ON LOANS.USER_ID = USERS.id
-              JOIN BOOKS ON LOANS.BOOK_ID = BOOKS.id
+    $query = "SELECT loans.id AS loan_id, users.id AS user_id, users.NAME as user_name, books.TITLE as book_title, loans.LOAN_DATE, loans.RETURN_DATE 
+              FROM loans
+              JOIN users ON loans.USER_ID = users.id
+              JOIN books ON loans.BOOK_ID = books.id
               WHERE 1=1";  // Use 1=1 to facilitate appending additional WHERE clauses
 
     // Append filters to the query if they are set
     $params = [];
     if (!empty($userFilter)) {
-        $query .= " AND USERS.NAME LIKE ?";
+        $query .= " AND users.NAME LIKE ?";
         $params[] = "%$userFilter%";
     }
     if (!empty($bookTitleFilter)) {
-        $query .= " AND BOOKS.TITLE LIKE ?";
+        $query .= " AND books.TITLE LIKE ?";
         $params[] = "%$bookTitleFilter%";
     }
 
@@ -290,7 +295,7 @@ function fetchLoans($userFilter = '', $bookTitleFilter = '') {
 function updateLoanReturnDate($loan_id, $return_date) {
     global $conn;
 
-    $stmt = $conn->prepare("UPDATE LOANS SET RETURN_DATE = ? WHERE id = ?");
+    $stmt = $conn->prepare("UPDATE loans SET RETURN_DATE = ? WHERE id = ?");
     return $stmt->execute([$return_date, $loan_id]);
 }
 
@@ -301,7 +306,7 @@ function deleteLoan($id) {
     global $conn;
 
     // Prepare SQL query to delete the loan by ID
-    $sql = "DELETE FROM LOANS WHERE id = :id";
+    $sql = "DELETE FROM loans WHERE id = :id";
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
@@ -316,11 +321,11 @@ function getUserLoans($user_id) {
     global $conn;
 
     // SQL query to retrieve all books loaned by the specific user
-    $stmt = $conn->prepare("SELECT LOANS.id, USERS.id AS user_id, USERS.NAME as user_name, BOOKS.TITLE as book_title, LOANS.LOAN_DATE, LOANS.RETURN_DATE 
-                             FROM LOANS 
-                             JOIN USERS ON LOANS.USER_ID = USERS.id
-                             JOIN BOOKS ON LOANS.BOOK_ID = BOOKS.id
-                             WHERE LOANS.USER_ID = :user_id");  // Added WHERE clause to filter by user ID
+    $stmt = $conn->prepare("SELECT loans.id, users.id AS user_id, users.NAME as user_name, books.TITLE as book_title, loans.LOAN_DATE, loans.RETURN_DATE 
+                             FROM loans
+                             JOIN users ON loans.USER_ID = users.id
+                             JOIN books ON loans.BOOK_ID = books.id
+                             WHERE loans.USER_ID = :user_id");  // Added WHERE clause to filter by user ID
 
     // Execute the statement with the user ID parameter
     if ($stmt->execute([':user_id' => $user_id])) {

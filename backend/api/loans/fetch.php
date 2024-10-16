@@ -3,6 +3,12 @@ include '../../includes/connection.php'; // Include your database connection
 include '../../includes/functions.php'; // Include necessary functions
 
 header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Your frontend origin
+
+// Specify which HTTP methods are allowed (GET, POST, etc.)
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
+
 
 // Get the filter parameters from the request
 $userFilter = isset($_GET['user']) ? $_GET['user'] : '';

@@ -2,6 +2,14 @@
 include '../../includes/functions.php';
 require '../../vendor/autoload.php'; // Path to where Composer installed the JWT library
 
+header("Access-Control-Allow-Origin: http://localhost:3000"); // Your frontend origin
+
+// Specify which HTTP methods are allowed (GET, POST, etc.)
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+
+// Specify allowed headers (add headers as necessary)
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+
 use \Firebase\JWT\JWT;
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -17,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($user['ROLE'] === 'librarian') {
                 // JWT token setup
                 $secret_key = "LIBRARIANADMIN"; // Use a strong, secret key for librarian JWT
-                $issuer_claim = "localhost"; // Your domain, or 'localhost' for development
+                $issuer_claim = "mydb"; // Your domain, or 'localhost' for development
                 $audience_claim = "librarians";   // Audience identifier for librarians
                 $issued_at = time();         // Current timestamp
                 $expiration_time = $issued_at + 3600; // Token valid for 1 hour (3600 seconds)

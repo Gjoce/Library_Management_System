@@ -37,7 +37,7 @@ async function handleFormSubmission(event) {
         DESCRIPTION: document.getElementById('bookDescription').value
     };
 
-    const url = bookId ? `http://localhost:8080/Library_Management_System/backend/api/books/edit.php` : 'http://localhost:8080/Library_Management_System/backend/api/books/add.php';
+    const url = bookId ? `http://localhost:8080/api/books/edit.php` : 'http://localhost:8080/api/books/add.php';
     const method = bookId ? 'PUT' : 'POST';
 
     try {
@@ -70,7 +70,7 @@ async function fetchBooks() {
     let queryString = `?search=${encodeURIComponent(searchInput)}&genre=${encodeURIComponent(genreFilter)}`;
 
     try {
-        const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/books/fetch.php${queryString}`);
+        const response = await fetch(`http://localhost:8080/api/books/fetch.php${queryString}`);
         books = await response.json();
         displayBooks();
         setupPagination();
@@ -149,7 +149,7 @@ function changePage(page) {
 
 function editBook(bookId) {
     // Fetch the specific book details by ID
-    fetch(`http://localhost:8080/Library_Management_System/backend/api/books/fetch_single_book.php?id=${bookId}`)
+    fetch(`http://localhost:8080/api/books/fetch_single_book.php?id=${bookId}`)
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -182,7 +182,7 @@ function editBook(bookId) {
 async function deleteBook(bookId) {
     if (confirm('Are you sure you want to delete this book?')) {
         try {
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/books/delete.php`, {
+            const response = await fetch(`http://localhost:8080/api/books/delete.php`, {
                 method: 'DELETE', // Use DELETE method
                 headers: {
                     'Content-Type': 'application/json'
@@ -212,7 +212,7 @@ function logout() {
     localStorage.removeItem('authToken');
 
     // Send a request to the server to handle logout, if necessary
-    fetch('http://localhost:8080/Library_Management_System/backend/api/users/logout.php', {
+    fetch('http://localhost:8080/api/users/logout.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'

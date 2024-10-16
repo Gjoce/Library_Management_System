@@ -5,7 +5,7 @@ async function fetchUserLoans() {
     if (userId) {
         try {
             // Fetch loans for the specific user
-            const response = await fetch(`http://localhost:8080/Library_Management_System/backend/api/loans/getSpecificUser.php?user_id=${userId}`);
+            const response = await fetch(`http://localhost:8080/api/loans/getSpecificUser.php?user_id=${userId}`);
             const loans = await response.json();
             console.log(loans);
             
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.removeItem('authToken');
 
     // Send a request to the server to handle logout, if necessary
-    fetch('http://localhost:8080/Library_Management_System/backend/api/users/logout.php', {
+    fetch('http://localhost:8080/api/users/logout.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(data => {
         alert(data.message || 'Logged out successfully!');
         // Redirect to the login page or perform any other necessary action
-        window.location.href = 'login.html';
+        window.location.href = 'loginUser.html';
     })
     .catch(error => {
         console.error('Error during logout:', error);

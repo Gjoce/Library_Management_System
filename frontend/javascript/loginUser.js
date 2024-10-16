@@ -12,7 +12,7 @@ document.getElementById('loginForm').addEventListener('submit', async function (
     };
 
     try {
-        const response = await fetch('http://localhost:8080/Library_Management_System/backend/api/users/loginUser.php', {
+        const response = await fetch('http://localhost:8080/api/users/loginUser.php', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

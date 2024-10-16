@@ -1,7 +1,7 @@
 <?php
 // connection.php
 
-$host = 'localhost'; // or your host
+$host = 'mydb'; // or your host
 $db = 'lms'; // your database name
 $user = 'root'; // your database username
 $pass = 'geslo'; // your database password
