@@ -26,14 +26,10 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
            
             localStorage.setItem('authToken', data.token);
 
-<<<<<<< HEAD
             
             localStorage.setItem('user', JSON.stringify(data.user));
 
             
-=======
-            // Redirect to dashboard after successful login
->>>>>>> 735a5f1359d4eea540c87b33d5bc209a5c795436
             setTimeout(() => {
                 window.location.href = 'dashboard.html';  
             }, 500);
