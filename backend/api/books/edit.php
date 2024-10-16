@@ -8,14 +8,13 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
-    // Get the input data from the request body
+    
     $inputData = json_decode(file_get_contents('php://input'), true);
 
-    // Check if all the required fields are present
     if (isset($inputData['id']) && isset($inputData['TITLE']) && isset($inputData['AUTHOR']) && isset($inputData['GENRE']) && isset($inputData['AVAILABLE_COPIES'])) {
         $bookId = $inputData['id'];
         
-        // Prepare the data array to pass to the function
+     
         $data = [
             'title' => $inputData['TITLE'],
             'author' => $inputData['AUTHOR'],
@@ -25,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'PUT') {
             'description' => $inputData['DESCRIPTION'] ?? ''
         ];
 
-        // Call the editBook function to update the book
+       
         $result = editBook($bookId, $data);
 
         if ($result) {

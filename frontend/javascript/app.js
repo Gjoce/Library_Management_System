@@ -19,19 +19,26 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
         });
 
         const responseText = await response.text();
-        const data = JSON.parse(responseText);  // Parse the response
+        const data = JSON.parse(responseText);  
 
-        // Check if login was successful
+       
         if (response.ok && data.token) {
-            // Store the JWT token in localStorage
+           
             localStorage.setItem('authToken', data.token);
 
+<<<<<<< HEAD
+            
+            localStorage.setItem('user', JSON.stringify(data.user));
+
+            
+=======
             // Redirect to dashboard after successful login
+>>>>>>> 735a5f1359d4eea540c87b33d5bc209a5c795436
             setTimeout(() => {
-                window.location.href = 'dashboard.html';  // Redirect to dashboard
+                window.location.href = 'dashboard.html';  
             }, 500);
         } else {
-            // Show error message if login failed
+           
             document.getElementById('errorMessage').textContent = data.message || 'Login failed!';
         }
 

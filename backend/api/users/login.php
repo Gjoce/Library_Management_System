@@ -19,6 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $email = $inputData['email'];
         $password = $inputData['password'];
 
+<<<<<<< HEAD
+        $user = loginUser($email, $password); 
+
+        if ($user) {
+            if ($user['ROLE'] === 'librarian') {
+               
+                $secret_key = "YOUR_SECRET_KEY"; 
+                $issuer_claim = "localhost"; 
+                $audience_claim = "users";   
+                $issued_at = time();        
+                $expiration_time = $issued_at + 3600; 
+              
+=======
         $user = loginUser($email, $password); // Function to validate user credentials
 
         if ($user) {
@@ -31,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $expiration_time = $issued_at + 3600; // Token valid for 1 hour (3600 seconds)
                 
                 // The payload that will be signed into the token
+>>>>>>> 735a5f1359d4eea540c87b33d5bc209a5c795436
                 $payload = array(
                     "iss" => $issuer_claim,
                     "aud" => $audience_claim,
@@ -39,18 +53,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     "data" => array(
                         "id" => $user['id'],
                         "email" => $user['EMAIL'],
-                        "role" => $user['ROLE'] // Add any other fields you want in the token
+                        "role" => $user['ROLE'] 
                     )
                 );
 
-                // Encode the payload using the secret key to generate the JWT token
                 $jwt = JWT::encode($payload, $secret_key, 'HS256');
 
-                // Return the token and user data to the client
+               
                 echo json_encode([
                     "message" => "Login successful!",
                     "token" => $jwt,
+<<<<<<< HEAD
+                   
+=======
                     "role" => "librarian" // Optionally send role back
+>>>>>>> 735a5f1359d4eea540c87b33d5bc209a5c795436
                 ]);
             } else {
                 echo json_encode(["message" => "Access denied. Only librarians can log in."]);

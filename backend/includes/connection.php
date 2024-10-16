@@ -1,5 +1,5 @@
 <?php
-// connection.php
+
 
 $host = 'mydb'; // or your host
 $db = 'lms'; // your database name

@@ -18,39 +18,38 @@ function fetchBooks($search = '', $genre = '') {
     // Start with the base query
     $sql = "SELECT * FROM books WHERE 1=1";
 
-    // Add search filtering if the search term is provided
+   
     if (!empty($search)) {
         $sql .= " AND (TITLE LIKE :search OR AUTHOR LIKE :search)";
     }
 
-    // Add genre filtering if a genre is selected
+  
     if (!empty($genre)) {
         $sql .= " AND GENRE = :genre";
     }
 
-    // Prepare the statement
+   
     $stmt = $conn->prepare($sql);
 
-    // Bind search parameter
+ 
     if (!empty($search)) {
         $searchParam = "%" . $search . "%";
         $stmt->bindParam(':search', $searchParam);
     }
 
-    // Bind genre parameter
+  
     if (!empty($genre)) {
         $stmt->bindParam(':genre', $genre);
     }
 
-    // Execute the query
+    
     $stmt->execute();
 
-    // Return the results
+   
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
-// Function to edit a book with optional fields
 function editBook($id, $data) {
     global $conn;
 
@@ -58,7 +57,7 @@ function editBook($id, $data) {
     $query = "UPDATE books SET ";
     $params = [];
     
-    // Check which fields are present and build the query accordingly
+    
     if (isset($data['title'])) {
         $query .= "TITLE = :title, ";
         $params[':title'] = $data['title'];
@@ -84,14 +83,14 @@ function editBook($id, $data) {
         $params[':description'] = $data['description'];
     }
 
-    // Remove the trailing comma and space
+    
     $query = rtrim($query, ', ');
 
-    // Add the WHERE clause
+    
     $query .= " WHERE id = :id";
     $params[':id'] = $id;
 
-    // Prepare and execute the SQL statement
+  
     $stmt = $conn->prepare($query);
     return $stmt->execute($params);
 }
@@ -100,12 +99,12 @@ function editBook($id, $data) {
 function deleteBook($id) {
     global $conn;
 
-    // First, delete any loans associated with this book
+    
     $deleteLoansQuery = "DELETE FROM loans WHERE BOOK_ID = :book_id";
     $stmt = $conn->prepare($deleteLoansQuery);
     $stmt->execute([':book_id' => $id]);
 
-    // Then, delete the book
+  
     $deleteBookQuery = "DELETE FROM books WHERE id = :id";
     $stmt = $conn->prepare($deleteBookQuery);
     return $stmt->execute([':id' => $id]);
@@ -113,11 +112,10 @@ function deleteBook($id) {
 
 
 
-// Add a new user to the database
+
 function addUser($name, $email, $password, $role = 'USER') {
     global $conn;
 
-    // Hash the password for security
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepare the SQL statement with PDO to include the role
@@ -125,12 +123,12 @@ function addUser($name, $email, $password, $role = 'USER') {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        // Bind the parameters (PDO style)
+       
         return $stmt->execute([
             ':name' => $name,
             ':email' => $email,
             ':password' => $hashed_password,
-            ':role' => $role // Bind the role parameter
+            ':role' => $role 
         ]);
     }
     return false;
@@ -138,7 +136,6 @@ function addUser($name, $email, $password, $role = 'USER') {
 
 
 
-// Fetch all users from the database
 function fetchUsers() {
     global $conn;
 
@@ -147,14 +144,14 @@ function fetchUsers() {
     $stmt = $conn->prepare($sql);
     
     if ($stmt->execute()) {
-        // Fetch all users as an associative array
+       
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     return false;
 }
 
 
-// Delete a user from the database
+
 function deleteUser($id) {
     global $conn;
 
@@ -163,18 +160,18 @@ function deleteUser($id) {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        // Bind the ID parameter and execute
+      
         return $stmt->execute([':id' => $id]);
     }
     return false;
 }
 
-//Edit user
+
 
 function editUser($id, $name, $email, $password) {
     global $conn;
 
-    // Hash the new password for security
+   
     $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
     // Prepare SQL query to update the user
@@ -182,7 +179,7 @@ function editUser($id, $name, $email, $password) {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        // Bind the parameters and execute
+       
         return $stmt->execute([
             ':name' => $name,
             ':email' => $email,
@@ -193,7 +190,7 @@ function editUser($id, $name, $email, $password) {
     return false;
 }
 
-//Login
+
 
 function loginUser($email, $password) {
     global $conn;
@@ -205,9 +202,9 @@ function loginUser($email, $password) {
     if ($stmt->execute([':email' => $email])) {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Verify the password
+       
         if ($user && password_verify($password, $user['PASSWORD'])) {
-            // Return user data excluding the password
+           
             unset($user['PASSWORD']);
             return $user;
         }
@@ -215,13 +212,10 @@ function loginUser($email, $password) {
     return false;
 }
 
-//LOANS
-
-// Function to add a loan and decrease available copies of a book
 function addLoan($user_id, $book_id, $loan_date, $return_date = null) {
     global $conn;
 
-    // Start a transaction
+   
     $conn->beginTransaction();
 
     try {
@@ -248,18 +242,18 @@ function addLoan($user_id, $book_id, $loan_date, $return_date = null) {
             $stmt = $conn->prepare($sql);
             $stmt->execute([':book_id' => $book_id]);
 
-            // Commit the transaction
+       
             $conn->commit();
 
-            return true; // Loan successfully added
+            return true; 
         } else {
-            // If no copies are available, roll back the transaction and return false
+           
             $conn->rollBack();
             return false;
         }
 
     } catch (Exception $e) {
-        // Roll back the transaction in case of an error
+       
         $conn->rollBack();
         return false;
     }
@@ -301,7 +295,6 @@ function updateLoanReturnDate($loan_id, $return_date) {
 
 
 
-// Function to delete a loan by ID
 function deleteLoan($id) {
     global $conn;
 
@@ -310,22 +303,21 @@ function deleteLoan($id) {
     $stmt = $conn->prepare($sql);
 
     if ($stmt) {
-        // Bind the ID parameter and execute
+        
         return $stmt->execute([':id' => $id]);
     }
     return false;
 }
 
-// Function to retrieve all loaned books for a specific user
 function getUserLoans($user_id) {
     global $conn;
 
-    // SQL query to retrieve all books loaned by the specific user
     $stmt = $conn->prepare("SELECT loans.id, users.id AS user_id, users.NAME as user_name, books.TITLE as book_title, loans.LOAN_DATE, loans.RETURN_DATE 
                              FROM loans
                              JOIN users ON loans.USER_ID = users.id
                              JOIN books ON loans.BOOK_ID = books.id
                              WHERE loans.USER_ID = :user_id");  // Added WHERE clause to filter by user ID
+
 
     // Execute the statement with the user ID parameter
     if ($stmt->execute([':user_id' => $user_id])) {
