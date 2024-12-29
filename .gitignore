@@ -1,5 +1,5 @@
 backend/includes/.env
-vendor
+
 sql
 docker-compose.yml
 Dockerfile
