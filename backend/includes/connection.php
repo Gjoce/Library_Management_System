@@ -1,6 +1,6 @@
 <?php
 
-require_once 'C:/xampp/htdocs/Library_Management_System/backend/vendor/autoload.php';
+require_once '../vendor/autoload.php';
 
 
 // Load environment variables
