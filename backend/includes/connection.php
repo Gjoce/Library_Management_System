@@ -2,23 +2,12 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-
-
-// Load environment variables
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
-
-// Retrieve database credentials from .env
-$host = $_ENV['DB_HOST'];
-$port = $_ENV['DB_PORT'];
-$db = $_ENV['DB_DATABASE'];
-$user = $_ENV['DB_USERNAME'];
-$pass = $_ENV['DB_PASSWORD'];
+// Retrieve the JawsDB connection string from Heroku environment variables
+$jawsdbUrl = getenv('JAWSDB_URL');
 
 try {
-    // Create a PDO connection
-    $dsn = "mysql:host=$host;port=$port;dbname=$db;charset=utf8";
-    $conn = new PDO($dsn, $user, $pass);
+    // Create a PDO connection using the JawsDB connection string
+    $conn = new PDO($jawsdbUrl);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     
 } catch (PDOException $e) {
