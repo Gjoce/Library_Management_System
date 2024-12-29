@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '../vendor/autoload.php';
 
 // Retrieve the JawsDB connection string from Heroku environment variables
 $jawsdbUrl = getenv('JAWSDB_URL');
