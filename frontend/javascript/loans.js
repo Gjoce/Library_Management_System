@@ -74,7 +74,7 @@ async function updateLoanReturnDate(loanId) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/Library_Management_System/backend/api/loans/updateReturnDate.php`,
+        `https://online-library-management-60dd26a214d9.herokuapp.com/api/loans/updateReturnDate.php`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -94,7 +94,7 @@ async function updateLoanReturnDate(loanId) {
 async function viewUserLoans(userId) {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/loans/getSpecificUser.php?user_id=${encodeURIComponent(
+      `https://online-library-management-60dd26a214d9.herokuapp.com/api/loans/getSpecificUser.php?user_id=${encodeURIComponent(
         userId
       )}`
     );
@@ -112,7 +112,7 @@ async function removeLoan(loanId) {
   if (confirm("Are you sure you want to remove this loan?")) {
     try {
       const response = await fetch(
-        `http://localhost:8080/api/loans/delete.php`,
+        `https://online-library-management-60dd26a214d9.herokuapp.com/api/loans/delete.php`,
         {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
@@ -133,13 +133,16 @@ function logout() {
   localStorage.removeItem("authToken");
 
   // Send a request to the server to handle logout, if necessary
-  fetch("http://localhost:8080/api/users/logout.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({}),
-  })
+  fetch(
+    "https://online-library-management-60dd26a214d9.herokuapp.com/api/users/logout.php",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({}),
+    }
+  )
     .then((response) => response.json())
     .then((data) => {
       alert(data.message || "Logged out successfully!");

@@ -29,7 +29,7 @@ async function fetchBooks() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/Library_Management_System/backend/api/books/fetch.php${queryString}`
+      `https://online-library-management-60dd26a214d9.herokuapp.com/api/books/fetch.php${queryString}`
     );
     books = await response.json();
     displayBooks();
@@ -80,7 +80,7 @@ async function loanBook(bookId) {
 
     try {
       const response = await fetch(
-        `http://localhost:8080/Library_Management_System/backend/api/loans/add.php`,
+        `https://online-library-management-60dd26a214d9.herokuapp.com/api/loans/add.php`,
         {
           method: "POST",
           headers: {

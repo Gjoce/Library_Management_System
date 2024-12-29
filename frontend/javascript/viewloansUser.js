@@ -6,7 +6,7 @@ async function fetchUserLoans() {
     try {
       // Fetch loans for the specific user
       const response = await fetch(
-        `http://localhost:8080/Library_Management_System/backend/api/loans/getSpecificUser.php?user_id=${userId}`
+        `https://online-library-management-60dd26a214d9.herokuapp.com/api/loans/getSpecificUser.php?user_id=${userId}`
       );
       const loans = await response.json();
       console.log(loans);
@@ -62,7 +62,7 @@ function logout() {
 
   // Send a request to the server to handle logout, if necessary
   fetch(
-    "http://localhost:8080/Library_Management_System/backend/api/users/logout.php",
+    "https://online-library-management-60dd26a214d9.herokuapp.com/api/users/logout.php",
     {
       method: "POST",
       headers: {

@@ -35,8 +35,8 @@ async function handleFormSubmission(event) {
   };
 
   const url = bookId
-    ? `http://localhost:8080/Library_Management_System/backend/api/books/edit.php`
-    : "http://localhost:8080/Library_Management_System/backend/api/books/add.php";
+    ? `https://online-library-management-60dd26a214d9.herokuapp.com/api/books/edit.php`
+    : "https://online-library-management-60dd26a214d9.herokuapp.com/api/books/add.php";
   const method = bookId ? "PUT" : "POST";
 
   try {
@@ -73,7 +73,7 @@ async function fetchBooks() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/Library_Management_System/backend/api/books/fetch.php${queryString}`
+      `https://online-library-management-60dd26a214d9.herokuapp.com/api/books/fetch.php${queryString}`
     );
     books = await response.json();
     displayBooks();
@@ -152,7 +152,7 @@ function changePage(page) {
 function editBook(bookId) {
   // Fetch the specific book details by ID
   fetch(
-    `http://localhost:8080/Library_Management_System/backend/api/books/fetch_single_book.php?id=${bookId}`
+    `https://online-library-management-60dd26a214d9.herokuapp.com/api/books/fetch_single_book.php?id=${bookId}`
   )
     .then((response) => {
       if (!response.ok) {
@@ -184,7 +184,7 @@ async function deleteBook(bookId) {
   if (confirm("Are you sure you want to delete this book?")) {
     try {
       const response = await fetch(
-        `http://localhost:8080/Library_Management_System/backend/api/books/delete.php`,
+        `https://online-library-management-60dd26a214d9.herokuapp.com/api/books/delete.php`,
         {
           method: "DELETE", // Use DELETE method
           headers: {
@@ -216,7 +216,7 @@ function logout() {
 
   // Send a request to the server to handle logout, if necessary
   fetch(
-    "http://localhost:8080/Library_Management_System/backend/api/users/logout.php",
+    "https://online-library-management-60dd26a214d9.herokuapp.com/api/users/logout.php",
     {
       method: "POST",
       headers: {
