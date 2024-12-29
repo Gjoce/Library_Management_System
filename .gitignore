@@ -4,3 +4,4 @@ sql
 docker-compose.yml
 Dockerfile
 frontend.Dockerfile
+txt.txt
