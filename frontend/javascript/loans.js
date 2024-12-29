@@ -26,7 +26,7 @@ async function fetchLoans() {
 
   try {
     const response = await fetch(
-      `http://localhost:8080/Library_Management_System/backend/api/loans/fetch.php${queryString}`
+      `https://online-library-management-60dd26a214d9.herokuapp.com/api/loans/fetch.php${queryString}`
     );
     const loans = await response.json();
     displayLoans(loans);
